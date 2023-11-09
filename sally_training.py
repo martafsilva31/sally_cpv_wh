@@ -75,7 +75,7 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     ######### Outputting training variable index for training step ##########
     observable_dict=madminer_settings[5]
     for i_obs, obs_name in enumerate(observable_dict):
-      logging.info(f'index: {i_obs}; name: {obs_name};')
+      logging.info(f'index: {i_obs}; name: {obs_name};') # this way we can easily see all the features 
 
     ########## Sample Augmentation ###########
 
@@ -83,7 +83,7 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     sampler=SampleAugmenter(f'{input_dir}/{observable_set}/{sample_name}.h5')
 
     # Creates a set of training data (as many as the number of estimators) - centered around the SM
-    # Samples from all benchmarks to take into account the different kinematics from CP-odd operator
+    # Samples from all benchmarks to take into account the different kinematics from CP-odd operator !!!! -> isto aumenta as flutuações estatisticas 
     for i_estimator in range(nestimators):
       _,_,_,eff_n_samples = sampler.sample_train_local(theta=sampling.benchmark('sm'),
                                         n_samples=int(nsamples),
@@ -132,8 +132,8 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     )    
 
     # saving ensemble state dict and training and validation losses
-    ensemble.save(f'{input_dir}/{observable_set}/models/{training_observables}/{model_name}/sally_ensemble_{sample_name}')
-    np.savez(f'{input_dir}/{observable_set}/models/{training_observables}/{model_name}/losses_{sample_name}',result)
+    ensemble.save(f'{input_dir}/{observable_set}/models/sally_{training_observables}/{model_name}/sally_ensemble_{sample_name}')
+    np.savez(f'{input_dir}/{observable_set}/models/sally_{training_observables}/{model_name}/losses_{sample_name}',result)
   
 if __name__ == "__main__":
 
