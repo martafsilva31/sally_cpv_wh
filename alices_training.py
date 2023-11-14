@@ -83,13 +83,14 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     # Creates a set of training data (as many as the number of estimators) - centered around the SM
     for i_estimator in range(nestimators):
         x, theta0, theta1, y, r_xz, t_xz, n_effective = sampler.sample_train_ratio(
-        theta0=sampling.random_morphing_points(1000, [("gaussian", 0.0, 0.5), ("gaussian", 0.0, 0.5)]),
+        theta0=sampling.random_morphing_points(1000, ("gaussian", 0.0, 0.5)),
         theta1=sampling.benchmark("sm"),
         n_samples=int(nsamples),
-        folder=f'{input_dir}/{observable_set}/training_samples/',
-        filename=f'train_score_{sample_name}_{i_estimator}',
+        folder=f'{input_dir}/{observable_set}/training_samples/alices',
+        filename=f'train_ratio_{sample_name}_{i_estimator}',
         sample_only_from_closest_benchmark=True,
         return_individual_n_effective=True,
+        n_processes = 8
     )
 
     logging.info(f'effective number of samples for estimator {i_estimator}: {n_effective}')
@@ -127,11 +128,11 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     # result is a list of N tuples, where N is the number of estimators,
     # and each tuple contains two arrays, the first with the training losses, the second with the validation losses
     result = ensemble.train_all(method='alices',
-      theta=[f'{input_dir}/{observable_set}/training_samples/theta0_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],                         
-      x=[f'{input_dir}/{observable_set}/training_samples/x_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
-      y=[f'{input_dir}/{observable_set}/training_samples/y_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
-      r_xz=[f'{input_dir}/{observable_set}/training_samples/r_xz_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
-      t_xz=[f'{input_dir}/{observable_set}/training_samples/t_xz_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
+      theta=[f'{input_dir}/{observable_set}/training_samples/alices/theta0_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],                         
+      x=[f'{input_dir}/{observable_set}/training_samples/alices/x_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
+      y=[f'{input_dir}/{observable_set}/training_samples/alices/y_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
+      r_xz=[f'{input_dir}/{observable_set}/training_samples/alices/r_xz_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
+      t_xz=[f'{input_dir}/{observable_set}/training_samples/alices/t_xz_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
       alpha=5,
       memmap=True,verbose="none",n_workers=4,limit_samplesize=nsamples,n_epochs=100,batch_size=1024,
     )    
