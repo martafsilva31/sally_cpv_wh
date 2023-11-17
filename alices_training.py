@@ -83,14 +83,14 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     # Creates a set of training data (as many as the number of estimators) - centered around the SM
     for i_estimator in range(nestimators):
         x, theta0, theta1, y, r_xz, t_xz, n_effective = sampler.sample_train_ratio(
-        theta0=sampling.random_morphing_points(1000, ("gaussian", 0.0, 0.5)),
+        theta0=sampling.random_morphing_points(1000, [("gaussian", 0.0, 0.5)]),
         theta1=sampling.benchmark("sm"),
         n_samples=int(nsamples),
         folder=f'{input_dir}/{observable_set}/training_samples/alices',
         filename=f'train_ratio_{sample_name}_{i_estimator}',
         sample_only_from_closest_benchmark=True,
         return_individual_n_effective=True,
-        n_processes = 8
+        n_processes = 4
     )
 
     logging.info(f'effective number of samples for estimator {i_estimator}: {n_effective}')
@@ -134,12 +134,12 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
       r_xz=[f'{input_dir}/{observable_set}/training_samples/alices/r_xz_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
       t_xz=[f'{input_dir}/{observable_set}/training_samples/alices/t_xz_train_ratio_{sample_name}_{i_estimator}.npy' for i_estimator in range(nestimators)],
       alpha=5,
-      memmap=True,verbose="none",n_workers=4,limit_samplesize=nsamples,n_epochs=100,batch_size=1024,
+      memmap=True,verbose="all",n_workers=4,limit_samplesize=nsamples,n_epochs=50,batch_size=1024,
     )    
    
     # saving ensemble state dict and training and validation losses
     ensemble.save(f'{input_dir}/{observable_set}/models/alices_{training_observables}/{model_name}/alices_ensemble_{sample_name}')
-    np.savez(f'{input_dir}/{observable_set}/models/alices_{training_observables}/{model_name}_/losses_{sample_name}',result)
+    np.savez(f'{input_dir}/{observable_set}/models/alices_{training_observables}/{model_name}/losses_{sample_name}',result)
 
 
 if __name__ == "__main__":

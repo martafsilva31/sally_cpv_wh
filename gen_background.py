@@ -47,16 +47,20 @@ if __name__ == "__main__":
 
     parser.add_argument('--prepare_scripts',help='Prepares only run scripts to e.g. submit to a batch system separately',default=False,action='store_true')
 
-    parser.add_argument('--mg_dir',help='Path for MadGraph installation',required=True)
+    parser.add_argument('--mg_dir',help='Path for MadGraph installation',default='/cvmfs/sw.el7/gcc63/madgraph/3.3.1/b01/')
+    
+    parser.add_argument('--launch_SLURM_jobs',help='If SLURM jobs are to be launched immediately after preparation of scripts',default=False,action="store_true")    
+
 
     args=parser.parse_args()
-
+    
     # Load morphing setup file
     miner = MadMiner()
     miner.load(f'{args.main_dir}/{args.setup_file}.h5')
     lhe = LHEReader(f'{args.main_dir}/{args.setup_file}.h5')
 
-    init_command=None,
+    # LIP Madgraph specifics
+    init_command='module load gcc63/madgraph/3.3.1',
 
     # W + b b~, divided by W decay channel and charge
 
@@ -70,7 +74,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -85,7 +89,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -100,7 +104,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -115,7 +119,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -132,7 +136,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -147,7 +151,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -162,7 +166,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -177,7 +181,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -194,7 +198,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -209,7 +213,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -224,7 +228,7 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
@@ -239,9 +243,16 @@ if __name__ == "__main__":
         pythia8_card_file=args.pythia_card if args.do_pythia else None,
         run_card_file='cards/run_card_250k_WHMadminerCuts.dat',
         sample_benchmark='sm',
-        initial_command=init_command,
+        initial_command=init_command if init_command!='' else None,
         is_background=True,
         only_prepare_script=args.prepare_scripts
     )
+    
+    # launch gen jobs to SLURM # LIP specifics
+    if args.launch_SLURM_jobs and args.prepare_scripts:
+        logging.info("Launching SLURM generation jobs")
+        cmd=f'find {args.main_dir}/background_samples/*/madminer -name "run.sh" -exec sbatch -p lipq --mem=4G {{}} \;'
+        os.popen(cmd)
+
     
     os.remove('/tmp/generate.mg5')
