@@ -90,7 +90,7 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
         filename=f'train_ratio_{sample_name}_{i_estimator}',
         sample_only_from_closest_benchmark=True,
         return_individual_n_effective=True,
-        n_processes = 4
+        n_processes = 8
     )
 
     logging.info(f'effective number of samples for estimator {i_estimator}: {n_effective}')
@@ -138,8 +138,8 @@ def augment_and_train(input_dir,sample_name,nsamples=-1,observable_set='met',tra
     )    
    
     # saving ensemble state dict and training and validation losses
-    ensemble.save(f'{input_dir}/{observable_set}/models/alices_{training_observables}/{model_name}/alices_ensemble_{sample_name}')
-    np.savez(f'{input_dir}/{observable_set}/models/alices_{training_observables}/{model_name}/losses_{sample_name}',result)
+    ensemble.save(f'{input_dir}/{observable_set}/models/{training_observables}/{model_name}/alices_ensemble_{sample_name}')
+    np.savez(f'{input_dir}/{observable_set}/models/{training_observables}/{model_name}/losses_{sample_name}',result)
 
 
 if __name__ == "__main__":
