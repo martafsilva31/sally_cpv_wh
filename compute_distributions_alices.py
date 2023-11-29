@@ -654,8 +654,9 @@ def plot_alices(model_path, args, channel):
     joint_likelihood_ratio_log = np.log(joint_likelihood_ratio)
     log_r_hat, _ = alices.evaluate_log_likelihood_ratio(x=x, theta = thetas)
     fig=plt.figure()
-    plt.scatter(thetas[:,0],-2*np.mean(log_r_hat,axis=1), color= '#CC002E', label = r"$\hat{r}(x|\theta)$ (ALICES)")
- 
+    sorted_indices = np.argsort(thetas[:, 0])
+    plt.plot(thetas[sorted_indices, 0], -2*np.mean(log_r_hat[sorted_indices],axis=1), color= '#CC002E', label = r"$\hat{r}(x|\theta)$ (ALICES)")
+
     if args.plot_joint_likelihood:
         t_th0 = joint_score
         x_t_th0 = np.ones_like(t_th0)
