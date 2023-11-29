@@ -776,7 +776,7 @@ if __name__ == '__main__':
             if args.plot_joint_likelihood:
                 plot_stem+='_joint_likelihood_and_score'
                 
-            alices_plot.savefig(f'{args.plot_dir}/alices_{plot_stem}_{channel}_{args.sample_type}_{args.alices_observables}_{args.alices_model}.pdf')
+            alices_plot.savefig(f'{args.plot_dir}/alices{plot_stem}_{channel}_{args.sample_type}_{args.alices_observables}_{args.alices_model}.pdf')
 
 
         if args.plot_losses:
