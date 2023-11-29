@@ -31,7 +31,7 @@ from madminer import sampling
 logging.basicConfig(
     format='%(asctime)-5.5s %(name)-20.20s %(levelname)-7.7s %(message)s',
     datefmt='%H:%M',
-    level=logging.INFO
+    level=logging.DEBUG
 )
 
 # Output of all other modules (e.g. matplotlib)
@@ -658,12 +658,12 @@ def plot_alices(model_path, args, channel):
     plt.plot(thetas[sorted_indices, 0], -2*np.mean(log_r_hat[sorted_indices],axis=1), color= '#CC002E', label = r"$\hat{r}(x|\theta)$ (ALICES)")
 
     if args.plot_joint_likelihood:
-        t_th0 = joint_score
+        t_th0 = -2*joint_score
         x_t_th0 = np.ones_like(t_th0)
         lengths = (t_th0**2 + x_t_th0**2)**0.5
         t_th0 /= lengths
         x_t_th0 /= lengths
-        plt.quiver(thetas, joint_likelihood_ratio_log, x_t_th0, t_th0, 
+        plt.quiver(thetas, -2*joint_likelihood_ratio_log, x_t_th0, t_th0, 
             scale=3.5, units='inches', angles='xy',
             alpha=.5, color='c', label = r"$r(x,z|\theta)$ (position) + $t(x,z|\theta)$ (slope)")
 
@@ -683,15 +683,15 @@ if __name__ == '__main__':
 
     parser.add_argument('-pdir','--plot_dir',help='folder where to save plots to',required=True)
 
-    parser.add_argument('-s','--sample_type',help='sample types to process, without/with samples generated at the BSM benchmark and without/with backgrounds.',choices=['signalOnly_SMonly_noSysts_lhe','signalOnly_noSysts_lhe','withBackgrounds_SMonly_noSysts_lhe','withBackgrounds_noSysts_lhe'],default='signalOnly_SMonly_noSysts_lhe')
+    parser.add_argument('-s','--sample_type',help='sample types to process, without/with samples generated at the BSM benchmark and without/with backgrounds.',choices=['signalOnly_SMonly_noSysts_lhe','signalOnly_noSysts_lhe','withBackgrounds_SMonly_noSysts_lhe','withBackgrounds_noSysts_lhe'],default='withBackgrounds_SMonly_noSysts_lhe')
         
     parser.add_argument('-c','--channel',help='lepton+charge flavor channels to plot.',choices=['wph_mu','wph_e','wmh_mu','wmh_e','wmh','wph','wh_mu','wh_e','wh'],default=['wh'],nargs="+")
 
     parser.add_argument('-o','--observables',help='which of the observables to plot. If None, plots all the observables in the file.',nargs="*",default=None)
     
-    parser.add_argument('-at','--augment_test',help='wheter to do augmentation in the test partition',default=False)
+    parser.add_argument('-at','--augment_test',help='wheter to do augmentation in the test partition',default=False,action='store_true')
     
-    parser.add_argument('--nsamples',help="number of events in augmented data sample",type=int,default=100)
+    parser.add_argument('--nsamples',help="number of events in augmented data sample",type=int,default=1000)
     
     parser.add_argument('-inputs','--plot_inputs',help='whether to plot the distribution of the input features.',default=False,action='store_true')
 
