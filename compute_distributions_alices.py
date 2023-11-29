@@ -587,7 +587,7 @@ def plot_distributions_split_backgrounds(
 
     return fig
 
-def augment_test(input_dir,sample_name,nsamples=100):
+def augment_test(input_dir,sample_name,nsamples):
 
   """  
   Extracts the joint likelihood ratio and the joint score for the test partition and plots the likelihood ratio as a function of the parameter theta 
